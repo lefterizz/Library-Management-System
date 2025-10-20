@@ -15,11 +15,11 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
-
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
 public class MainController {
@@ -62,6 +62,17 @@ public class MainController {
     @FXML private Label detailPriceValue;
     @FXML private Label detailRatingValue;
 
+    @FXML private VBox bookDetailsPane;
+    @FXML private Label detailTitle;
+    @FXML private Label detailAuthor;
+    @FXML private Label detailMainGenre;
+    @FXML private Label detailSubGenre;
+    @FXML private Label detailType;
+    @FXML private Label detailPrice;
+    @FXML private Label detailRating;
+    @FXML private Label detailNumRated;
+    @FXML private Label detailUrl;
+
     private final ObservableList<Book> books = FXCollections.observableArrayList();
 
     private Tab bookDetailsTab;
@@ -85,6 +96,9 @@ public class MainController {
     }
 
         setupBookDetailsTab();
+
+        // Ensure the details pane starts hidden
+        hideBookDetails();
 
         // Dummy data for now
         books.addAll(
