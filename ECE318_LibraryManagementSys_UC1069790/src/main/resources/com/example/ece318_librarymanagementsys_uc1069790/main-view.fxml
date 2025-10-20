@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
+<?import org.controlsfx.control.CheckComboBox?>
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.example.ece318_librarymanagementsys_uc1069790.MainController">
 
-    <!-- TOP AREA -->
     <top>
         <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-background-color: #2c3e50;">
             <padding>
@@ -18,22 +18,24 @@
         </HBox>
     </top>
 
-    <!-- CENTER AREA -->
     <center>
         <TabPane fx:id="mainTabPane">
             <tabs>
-                <!-- BOOKS TAB -->
                 <Tab text="Books" fx:id="booksTab">
-                    <BorderPane fx:id="booksPane">
+                    <BorderPane>
                         <top>
-                            <HBox spacing="10">
+                            <HBox spacing="10" alignment="CENTER_LEFT">
                                 <padding>
                                     <Insets top="10" right="10" bottom="10" left="10"/>
                                 </padding>
-                                <TextField fx:id="searchBooksField" promptText="Search by title or author..." />
-                                <ComboBox fx:id="filterGenreBox" promptText="Filter by Genre"/>
-                                <ComboBox fx:id="filterSubGenreBox" promptText="Filter by Sub-genre"/>
-                                <Button text="Export PDF" fx:id="exportBooksBtn"/>
+                                <TextField fx:id="searchBooksField" promptText="Search by title or author..." HBox.hgrow="ALWAYS"/>
+                                <CheckComboBox fx:id="filterGenreBox" prefWidth="200" />
+                                <ComboBox fx:id="filterSubGenreBox" prefWidth="180" promptText="All sub-genres"/>
+                                <ChoiceBox fx:id="sortFieldChoice" prefWidth="130"/>
+                                <ToggleButton fx:id="sortDirectionToggle" text="Descending"/>
+                                <Button fx:id="clearBookFiltersButton" text="Clear"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Button text="Export PDF" onAction="#onExportBooks"/>
                             </HBox>
                         </top>
 
@@ -44,46 +46,61 @@
                                         <columns>
                                             <TableColumn fx:id="colTitle" text="Title"/>
                                             <TableColumn fx:id="colAuthor" text="Author"/>
-                                            <TableColumn fx:id="colGenre" text="Genre"/>
+                                            <TableColumn fx:id="colGenre" text="Main Genre"/>
                                             <TableColumn fx:id="colSubGenre" text="Sub-Genre"/>
                                             <TableColumn fx:id="colPrice" text="Price"/>
                                             <TableColumn fx:id="colRating" text="Rating"/>
                                         </columns>
                                     </TableView>
-                                    <VBox fx:id="bookDetailsPane" spacing="12" prefWidth="320" visible="false" managed="false" style="-fx-background-color: #f4f6f8;">
+                                    <VBox fx:id="bookDetailsPane" spacing="14" prefWidth="340" visible="false" managed="false"
+                                          style="-fx-background-color: #f4f6f8;">
                                         <padding>
                                             <Insets top="20" right="20" bottom="20" left="20"/>
                                         </padding>
-                                        <Label text="Book Details" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
-                                        <Separator/>
-                                        <GridPane hgap="10" vgap="10">
-                                            <columnConstraints>
-                                                <ColumnConstraints halignment="RIGHT" percentWidth="40"/>
-                                                <ColumnConstraints halignment="LEFT" percentWidth="60" hgrow="ALWAYS"/>
-                                            </columnConstraints>
-                                            <children>
-                                                <Label text="Title:" GridPane.rowIndex="0" style="-fx-font-weight: bold;"/>
-                                                <Label fx:id="detailTitleValue" text="-" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                                        <children>
+                                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                                <Label text="Book Details" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                                                <Region HBox.hgrow="ALWAYS"/>
+                                                <Button text="✕" onAction="#onCloseDetails" style="-fx-font-size: 14px;"/>
+                                            </HBox>
+                                            <Separator/>
+                                            <GridPane hgap="10" vgap="10">
+                                                <columnConstraints>
+                                                    <ColumnConstraints halignment="RIGHT" percentWidth="40"/>
+                                                    <ColumnConstraints halignment="LEFT" percentWidth="60" hgrow="ALWAYS"/>
+                                                </columnConstraints>
+                                                <children>
+                                                    <Label text="Title:" GridPane.rowIndex="0" style="-fx-font-weight: bold;"/>
+                                                    <Label fx:id="detailTitleValue" text="-" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
-                                                <Label text="Author:" GridPane.rowIndex="1" style="-fx-font-weight: bold;"/>
-                                                <Label fx:id="detailAuthorValue" text="-" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                                                    <Label text="Author:" GridPane.rowIndex="1" style="-fx-font-weight: bold;"/>
+                                                    <Label fx:id="detailAuthorValue" text="-" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
-                                                <Label text="Main Genre:" GridPane.rowIndex="2" style="-fx-font-weight: bold;"/>
-                                                <Label fx:id="detailGenreValue" text="-" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                                                    <Label text="Main Genre:" GridPane.rowIndex="2" style="-fx-font-weight: bold;"/>
+                                                    <Label fx:id="detailGenreValue" text="-" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
-                                                <Label text="Sub-Genre:" GridPane.rowIndex="3" style="-fx-font-weight: bold;"/>
-                                                <Label fx:id="detailSubGenreValue" text="-" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                                                    <Label text="Sub-Genre:" GridPane.rowIndex="3" style="-fx-font-weight: bold;"/>
+                                                    <Label fx:id="detailSubGenreValue" text="-" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
 
-                                                <Label text="Type:" GridPane.rowIndex="4" style="-fx-font-weight: bold;"/>
-                                                <Label fx:id="detailTypeValue" text="-" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                                                    <Label text="Type:" GridPane.rowIndex="4" style="-fx-font-weight: bold;"/>
+                                                    <Label fx:id="detailTypeValue" text="-" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
 
-                                                <Label text="Price:" GridPane.rowIndex="5" style="-fx-font-weight: bold;"/>
-                                                <Label fx:id="detailPriceValue" text="-" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+                                                    <Label text="Price:" GridPane.rowIndex="5" style="-fx-font-weight: bold;"/>
+                                                    <Label fx:id="detailPriceValue" text="-" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
 
-                                                <Label text="Rating:" GridPane.rowIndex="6" style="-fx-font-weight: bold;"/>
-                                                <Label fx:id="detailRatingValue" text="-" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
-                                            </children>
-                                        </GridPane>
+                                                    <Label text="Rating:" GridPane.rowIndex="6" style="-fx-font-weight: bold;"/>
+                                                    <Label fx:id="detailRatingValue" text="-" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+
+                                                    <Label text="Ratings:" GridPane.rowIndex="7" style="-fx-font-weight: bold;"/>
+                                                    <Label fx:id="detailNumRatingsValue" text="-" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+
+                                                    <Label text="Link:" GridPane.rowIndex="8" style="-fx-font-weight: bold;"/>
+                                                    <Hyperlink fx:id="detailUrlValue" text="No link available" disable="true"
+                                                               onAction="#onBookUrlClicked"
+                                                               GridPane.columnIndex="1" GridPane.rowIndex="8" wrapText="true"/>
+                                                </children>
+                                            </GridPane>
+                                        </children>
                                     </VBox>
                                 </items>
                             </SplitPane>
@@ -94,36 +111,70 @@
                                 <padding>
                                     <Insets top="10" right="10" bottom="10" left="10"/>
                                 </padding>
-                                <Button text="Add" fx:id="addBookBtn"/>
-                                <Button text="Edit" fx:id="editBookBtn"/>
-                                <Button text="Delete" fx:id="deleteBookBtn"/>
+                                <Button text="Add" onAction="#onAddBook"/>
+                                <Button text="Edit" onAction="#onEditBook"/>
+                                <Button text="Delete" onAction="#onDeleteBook"/>
                             </HBox>
                         </bottom>
                     </BorderPane>
                 </Tab>
 
-                <!-- GENRES TAB -->
                 <Tab text="Genres" fx:id="genresTab">
-                    <BorderPane fx:id="genresPane">
+                    <BorderPane>
+                        <top>
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <padding>
+                                    <Insets top="10" right="10" bottom="10" left="10"/>
+                                </padding>
+                                <TextField fx:id="searchGenresField" promptText="Search genres..." HBox.hgrow="ALWAYS"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Button text="Add" onAction="#onAddGenre"/>
+                                <Button text="Edit" onAction="#onEditGenre"/>
+                                <Button text="Delete" onAction="#onDeleteGenre"/>
+                                <Button text="Export PDF" onAction="#onExportGenres"/>
+                            </HBox>
+                        </top>
+
                         <center>
                             <TableView fx:id="genresTable">
                                 <columns>
                                     <TableColumn fx:id="colGenreName" text="Genre"/>
-                                    <TableColumn fx:id="colGenreDescription" text="Description"/>
+                                    <TableColumn fx:id="colGenreSubCount" text="Sub-genres"/>
+                                    <TableColumn fx:id="colGenreTotalBooks" text="Books"/>
+                                    <TableColumn fx:id="colGenreAvgRating" text="Avg Rating"/>
+                                    <TableColumn fx:id="colGenreAvgPrice" text="Avg Price"/>
+                                    <TableColumn fx:id="colGenreUrl" text="URL"/>
                                 </columns>
                             </TableView>
                         </center>
                     </BorderPane>
                 </Tab>
 
-                <!-- SUB-GENRES TAB -->
                 <Tab text="Sub-genres" fx:id="subGenresTab">
-                    <BorderPane fx:id="subGenresPane">
+                    <BorderPane>
+                        <top>
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <padding>
+                                    <Insets top="10" right="10" bottom="10" left="10"/>
+                                </padding>
+                                <TextField fx:id="searchSubGenresField" promptText="Search sub-genres..." HBox.hgrow="ALWAYS"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Button text="Add" onAction="#onAddSubGenre"/>
+                                <Button text="Edit" onAction="#onEditSubGenre"/>
+                                <Button text="Delete" onAction="#onDeleteSubGenre"/>
+                                <Button text="Export PDF" onAction="#onExportSubGenres"/>
+                            </HBox>
+                        </top>
+
                         <center>
                             <TableView fx:id="subGenresTable">
                                 <columns>
                                     <TableColumn fx:id="colSubGenreName" text="Sub-Genre"/>
-                                    <TableColumn fx:id="colParentGenre" text="Parent Genre"/>
+                                    <TableColumn fx:id="colParentGenre" text="Main Genre"/>
+                                    <TableColumn fx:id="colSubGenreBooks" text="Books"/>
+                                    <TableColumn fx:id="colSubGenreAvgRating" text="Avg Rating"/>
+                                    <TableColumn fx:id="colSubGenreAvgPrice" text="Avg Price"/>
+                                    <TableColumn fx:id="colSubGenreUrl" text="URL"/>
                                 </columns>
                             </TableView>
                         </center>
@@ -132,5 +183,4 @@
             </tabs>
         </TabPane>
     </center>
-
 </BorderPane>
