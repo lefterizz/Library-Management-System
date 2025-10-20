@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
@@ -37,6 +38,8 @@ public class MainController {
     @FXML private Label detailRatingValue;
 
     private final ObservableList<Book> books = FXCollections.observableArrayList();
+
+    private Tab bookDetailsTab;
 
     @FXML
     public void initialize() {
@@ -71,6 +74,7 @@ public class MainController {
                 showBookDetails(newSel);
             } else {
                 hideBookDetails();
+
             }
         });
     }
@@ -126,6 +130,9 @@ public class MainController {
     }
 
     private void showBookDetails(Book book) {
+        bookDetailsPane.setManaged(true);
+        bookDetailsPane.setVisible(true);
+
         detailTitleValue.setText(book.getTitle());
         detailAuthorValue.setText(book.getAuthor());
         detailGenreValue.setText(book.getMainGenre());
@@ -145,5 +152,6 @@ public class MainController {
         detailTypeValue.setText("-");
         detailPriceValue.setText("-");
         detailRatingValue.setText("-");
+
     }
 }
