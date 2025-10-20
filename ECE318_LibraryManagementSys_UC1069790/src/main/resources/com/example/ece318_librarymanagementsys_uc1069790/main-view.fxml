@@ -46,61 +46,46 @@
                                         <columns>
                                             <TableColumn fx:id="colTitle" text="Title"/>
                                             <TableColumn fx:id="colAuthor" text="Author"/>
-                                            <TableColumn fx:id="colGenre" text="Main Genre"/>
+                                            <TableColumn fx:id="colGenre" text="Genre"/>
                                             <TableColumn fx:id="colSubGenre" text="Sub-Genre"/>
                                             <TableColumn fx:id="colPrice" text="Price"/>
                                             <TableColumn fx:id="colRating" text="Rating"/>
                                         </columns>
                                     </TableView>
-                                    <VBox fx:id="bookDetailsPane" spacing="14" prefWidth="340" visible="false" managed="false"
-                                          style="-fx-background-color: #f4f6f8;">
+                                    <VBox fx:id="bookDetailsPane" spacing="12" prefWidth="320" visible="false" managed="false" style="-fx-background-color: #f4f6f8;">
                                         <padding>
                                             <Insets top="20" right="20" bottom="20" left="20"/>
                                         </padding>
-                                        <children>
-                                            <HBox alignment="CENTER_LEFT" spacing="10">
-                                                <Label text="Book Details" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
-                                                <Region HBox.hgrow="ALWAYS"/>
-                                                <Button text="✕" onAction="#onCloseDetails" style="-fx-font-size: 14px;"/>
-                                            </HBox>
-                                            <Separator/>
-                                            <GridPane hgap="10" vgap="10">
-                                                <columnConstraints>
-                                                    <ColumnConstraints halignment="RIGHT" percentWidth="40"/>
-                                                    <ColumnConstraints halignment="LEFT" percentWidth="60" hgrow="ALWAYS"/>
-                                                </columnConstraints>
-                                                <children>
-                                                    <Label text="Title:" GridPane.rowIndex="0" style="-fx-font-weight: bold;"/>
-                                                    <Label fx:id="detailTitleValue" text="-" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                                        <Label text="Book Details" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                                        <Separator/>
+                                        <GridPane hgap="10" vgap="10">
+                                            <columnConstraints>
+                                                <ColumnConstraints halignment="RIGHT" percentWidth="40"/>
+                                                <ColumnConstraints halignment="LEFT" percentWidth="60" hgrow="ALWAYS"/>
+                                            </columnConstraints>
+                                            <children>
+                                                <Label text="Title:" GridPane.rowIndex="0" style="-fx-font-weight: bold;"/>
+                                                <Label fx:id="detailTitleValue" text="-" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
-                                                    <Label text="Author:" GridPane.rowIndex="1" style="-fx-font-weight: bold;"/>
-                                                    <Label fx:id="detailAuthorValue" text="-" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                                                <Label text="Author:" GridPane.rowIndex="1" style="-fx-font-weight: bold;"/>
+                                                <Label fx:id="detailAuthorValue" text="-" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
-                                                    <Label text="Main Genre:" GridPane.rowIndex="2" style="-fx-font-weight: bold;"/>
-                                                    <Label fx:id="detailGenreValue" text="-" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                                                <Label text="Main Genre:" GridPane.rowIndex="2" style="-fx-font-weight: bold;"/>
+                                                <Label fx:id="detailGenreValue" text="-" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
-                                                    <Label text="Sub-Genre:" GridPane.rowIndex="3" style="-fx-font-weight: bold;"/>
-                                                    <Label fx:id="detailSubGenreValue" text="-" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                                                <Label text="Sub-Genre:" GridPane.rowIndex="3" style="-fx-font-weight: bold;"/>
+                                                <Label fx:id="detailSubGenreValue" text="-" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
 
-                                                    <Label text="Type:" GridPane.rowIndex="4" style="-fx-font-weight: bold;"/>
-                                                    <Label fx:id="detailTypeValue" text="-" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                                                <Label text="Type:" GridPane.rowIndex="4" style="-fx-font-weight: bold;"/>
+                                                <Label fx:id="detailTypeValue" text="-" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
 
-                                                    <Label text="Price:" GridPane.rowIndex="5" style="-fx-font-weight: bold;"/>
-                                                    <Label fx:id="detailPriceValue" text="-" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+                                                <Label text="Price:" GridPane.rowIndex="5" style="-fx-font-weight: bold;"/>
+                                                <Label fx:id="detailPriceValue" text="-" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
 
-                                                    <Label text="Rating:" GridPane.rowIndex="6" style="-fx-font-weight: bold;"/>
-                                                    <Label fx:id="detailRatingValue" text="-" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
-
-                                                    <Label text="Ratings:" GridPane.rowIndex="7" style="-fx-font-weight: bold;"/>
-                                                    <Label fx:id="detailNumRatingsValue" text="-" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
-
-                                                    <Label text="Link:" GridPane.rowIndex="8" style="-fx-font-weight: bold;"/>
-                                                    <Hyperlink fx:id="detailUrlValue" text="No link available" disable="true"
-                                                               onAction="#onBookUrlClicked"
-                                                               GridPane.columnIndex="1" GridPane.rowIndex="8" wrapText="true"/>
-                                                </children>
-                                            </GridPane>
-                                        </children>
+                                                <Label text="Rating:" GridPane.rowIndex="6" style="-fx-font-weight: bold;"/>
+                                                <Label fx:id="detailRatingValue" text="-" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+                                            </children>
+                                        </GridPane>
                                     </VBox>
                                 </items>
                             </SplitPane>

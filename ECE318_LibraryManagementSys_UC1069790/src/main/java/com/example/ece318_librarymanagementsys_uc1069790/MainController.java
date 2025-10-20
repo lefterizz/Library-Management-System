@@ -16,37 +16,16 @@ import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
+
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
-import javafx.stage.Window;
-import org.controlsfx.control.CheckComboBox;
-
-import java.awt.Desktop;
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.Path;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Currency;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class MainController {
 
-    private static final DecimalFormat PRICE_FORMAT = new DecimalFormat("¤#,##0.00");
-
-    static {
-        PRICE_FORMAT.setCurrency(Currency.getInstance(Locale.US));
-    }
+    @FXML private TabPane mainTabPane;
+    @FXML private Tab booksTab;
 
     @FXML private TableView<Book> booksTable;
     @FXML private TableColumn<Book, String> colTitle;
@@ -74,30 +53,18 @@ public class MainController {
     @FXML private Label detailNumRatingsValue;
     @FXML private Hyperlink detailUrlValue;
 
-    @FXML private TableView<Genre> genresTable;
-    @FXML private TableColumn<Genre, String> colGenreName;
-    @FXML private TableColumn<Genre, Number> colGenreSubCount;
-    @FXML private TableColumn<Genre, Number> colGenreTotalBooks;
-    @FXML private TableColumn<Genre, Number> colGenreAvgRating;
-    @FXML private TableColumn<Genre, Number> colGenreAvgPrice;
-    @FXML private TableColumn<Genre, String> colGenreUrl;
-    @FXML private TextField searchGenresField;
+    @FXML private VBox bookDetailsPane;
+    @FXML private Label detailTitleValue;
+    @FXML private Label detailAuthorValue;
+    @FXML private Label detailGenreValue;
+    @FXML private Label detailSubGenreValue;
+    @FXML private Label detailTypeValue;
+    @FXML private Label detailPriceValue;
+    @FXML private Label detailRatingValue;
 
-    @FXML private TableView<SubGenre> subGenresTable;
-    @FXML private TableColumn<SubGenre, String> colSubGenreName;
-    @FXML private TableColumn<SubGenre, String> colParentGenre;
-    @FXML private TableColumn<SubGenre, Number> colSubGenreBooks;
-    @FXML private TableColumn<SubGenre, Number> colSubGenreAvgRating;
-    @FXML private TableColumn<SubGenre, Number> colSubGenreAvgPrice;
-    @FXML private TableColumn<SubGenre, String> colSubGenreUrl;
-    @FXML private TextField searchSubGenresField;
+    private final ObservableList<Book> books = FXCollections.observableArrayList();
 
-    private LibraryRepository repository;
-    private FilteredList<Book> filteredBooks;
-    private SortedList<Book> sortedBooks;
-    private FilteredList<Genre> filteredGenres;
-    private FilteredList<SubGenre> filteredSubGenres;
-    private Book selectedBook;
+    private Tab bookDetailsTab;
 
     @FXML
     public void initialize() {
@@ -117,23 +84,24 @@ public class MainController {
         repository.getSubGenres().addListener((ListChangeListener<SubGenre>) change -> refreshSubGenreFilterOptions());
     }
 
-    private void setupBooksTab() {
-        colTitle.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getTitle()));
-        colAuthor.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getAuthor()));
-        colGenre.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMainGenre()));
-        colSubGenre.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getSubGenre()));
-        colPrice.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getPrice()));
-        colRating.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getRating()));
+        setupBookDetailsTab();
 
-        filteredBooks = new FilteredList<>(repository.getBooks(), book -> true);
-        sortedBooks = new SortedList<>(filteredBooks);
-        booksTable.setItems(sortedBooks);
+        // Dummy data for now
+        books.addAll(
+                new Book("Clean Code", "Robert C. Martin", "Programming", "Software Engineering", "Paperback", 25.5, 4.8, 10500, "https://..."),
+                new Book("Effective Java", "Joshua Bloch", "Programming", "Java", "Hardcover", 30.0, 4.7, 8500, "https://..."),
+                new Book("Design Patterns", "GoF", "Programming", "Software Design", "Kindle", 22.0, 4.6, 7000, "https://...")
+        );
+
+        booksTable.setItems(books);
+        hideBookDetails();
 
         booksTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
             if (newSel != null) {
                 showBookDetails(newSel);
             } else {
                 hideBookDetails();
+
             }
         });
 
@@ -279,25 +247,70 @@ public class MainController {
         applyBookSorting();
     }
 
+    private void setupBookDetailsTab() {
+        bookDetailsTab = new Tab("Book Details");
+        bookDetailsTab.setClosable(true);
+
+        detailTitleValue = createDetailValueLabel();
+        detailAuthorValue = createDetailValueLabel();
+        detailGenreValue = createDetailValueLabel();
+        detailSubGenreValue = createDetailValueLabel();
+        detailTypeValue = createDetailValueLabel();
+        detailPriceValue = createDetailValueLabel();
+        detailRatingValue = createDetailValueLabel();
+
+        GridPane content = new GridPane();
+        content.setHgap(10);
+        content.setVgap(10);
+
+        addDetailRow(content, 0, "Title:", detailTitleValue);
+        addDetailRow(content, 1, "Author:", detailAuthorValue);
+        addDetailRow(content, 2, "Main Genre:", detailGenreValue);
+        addDetailRow(content, 3, "Sub-Genre:", detailSubGenreValue);
+        addDetailRow(content, 4, "Type:", detailTypeValue);
+        addDetailRow(content, 5, "Price:", detailPriceValue);
+        addDetailRow(content, 6, "Rating:", detailRatingValue);
+
+        VBox wrapper = new VBox(content);
+        wrapper.setSpacing(10);
+        VBox.setVgrow(content, Priority.ALWAYS);
+        wrapper.setPadding(new javafx.geometry.Insets(20));
+        bookDetailsTab.setContent(wrapper);
+
+        bookDetailsTab.setOnClosed(event -> booksTable.getSelectionModel().clearSelection());
+    }
+
+    private Label createDetailValueLabel() {
+        Label label = new Label();
+        label.setWrapText(true);
+        label.setMaxWidth(Double.MAX_VALUE);
+        return label;
+    }
+
+    private void addDetailRow(GridPane grid, int rowIndex, String header, Label valueLabel) {
+        Label headerLabel = new Label(header);
+        headerLabel.setStyle("-fx-font-weight: bold;");
+
+        grid.add(headerLabel, 0, rowIndex);
+        grid.add(valueLabel, 1, rowIndex);
+
+        GridPane.setHgrow(valueLabel, Priority.ALWAYS);
+    }
+
     private void showBookDetails(Book book) {
-        selectedBook = book;
         bookDetailsPane.setManaged(true);
         bookDetailsPane.setVisible(true);
+
         detailTitleValue.setText(book.getTitle());
         detailAuthorValue.setText(book.getAuthor());
         detailGenreValue.setText(book.getMainGenre());
         detailSubGenreValue.setText(book.getSubGenre());
         detailTypeValue.setText(book.getType());
-        detailPriceValue.setText(formatPrice(book.getPrice()));
-        detailRatingValue.setText(String.format("%.2f", book.getRating()));
-        detailNumRatingsValue.setText(String.valueOf(book.getNumRated()));
-        String url = book.getUrl();
-        detailUrlValue.setText(url == null || url.isBlank() ? "No link available" : url);
-        detailUrlValue.setDisable(url == null || url.isBlank());
+        detailPriceValue.setText("$" + String.format("%.2f", book.getPrice()));
+        detailRatingValue.setText(book.getRating() + " (" + book.getNumRated() + " ratings)");
     }
 
     private void hideBookDetails() {
-        selectedBook = null;
         bookDetailsPane.setVisible(false);
         bookDetailsPane.setManaged(false);
         detailTitleValue.setText("-");
