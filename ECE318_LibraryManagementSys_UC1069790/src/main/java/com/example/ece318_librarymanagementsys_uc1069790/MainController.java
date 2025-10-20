@@ -5,8 +5,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 
 public class MainController {
+
+    @FXML private TabPane mainTabPane;
+    @FXML private Tab booksTab;
 
     @FXML private TableView<Book> booksTable;
     @FXML private TableColumn<Book, String> colTitle;
@@ -19,6 +23,15 @@ public class MainController {
     @FXML private TextField searchBooksField;
     @FXML private ComboBox<String> filterGenreBox;
     @FXML private ComboBox<String> filterSubGenreBox;
+
+    @FXML private VBox bookDetailsPane;
+    @FXML private Label detailTitleValue;
+    @FXML private Label detailAuthorValue;
+    @FXML private Label detailGenreValue;
+    @FXML private Label detailSubGenreValue;
+    @FXML private Label detailTypeValue;
+    @FXML private Label detailPriceValue;
+    @FXML private Label detailRatingValue;
 
     private final ObservableList<Book> books = FXCollections.observableArrayList();
 
@@ -45,25 +58,39 @@ public class MainController {
         );
 
         booksTable.setItems(books);
+        hideBookDetails();
 
         // Show details when a book is selected
         booksTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
-            if (newSel != null) showBookDetails(newSel);
+            if (newSel != null) {
+                showBookDetails(newSel);
+            } else {
+                hideBookDetails();
+            }
         });
     }
 
     private void showBookDetails(Book book) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Book Details");
-        alert.setHeaderText(book.getTitle());
-        alert.setContentText(
-                "Author: " + book.getAuthor() + "\n" +
-                        "Main Genre: " + book.getMainGenre() + "\n" +
-                        "Sub-Genre: " + book.getSubGenre() + "\n" +
-                        "Type: " + book.getType() + "\n" +
-                        "Price: $" + book.getPrice() + "\n" +
-                        "Rating: " + book.getRating() + " (" + book.getNumRated() + " ratings)"
-        );
-        alert.showAndWait();
+        bookDetailsPane.setManaged(true);
+        bookDetailsPane.setVisible(true);
+        detailTitleValue.setText(book.getTitle());
+        detailAuthorValue.setText(book.getAuthor());
+        detailGenreValue.setText(book.getMainGenre());
+        detailSubGenreValue.setText(book.getSubGenre());
+        detailTypeValue.setText(book.getType());
+        detailPriceValue.setText("$" + String.format("%.2f", book.getPrice()));
+        detailRatingValue.setText(book.getRating() + " (" + book.getNumRated() + " ratings)");
+    }
+
+    private void hideBookDetails() {
+        bookDetailsPane.setVisible(false);
+        bookDetailsPane.setManaged(false);
+        detailTitleValue.setText("-");
+        detailAuthorValue.setText("-");
+        detailGenreValue.setText("-");
+        detailSubGenreValue.setText("-");
+        detailTypeValue.setText("-");
+        detailPriceValue.setText("-");
+        detailRatingValue.setText("-");
     }
 }
