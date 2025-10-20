@@ -4,7 +4,12 @@ import com.example.ece318_librarymanagementsys_uc1069790.model.Book;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 
 public class MainController {
 
@@ -19,6 +24,17 @@ public class MainController {
     @FXML private TextField searchBooksField;
     @FXML private ComboBox<String> filterGenreBox;
     @FXML private ComboBox<String> filterSubGenreBox;
+
+    @FXML private VBox bookDetailsPane;
+    @FXML private Label detailTitle;
+    @FXML private Label detailAuthor;
+    @FXML private Label detailMainGenre;
+    @FXML private Label detailSubGenre;
+    @FXML private Label detailType;
+    @FXML private Label detailPrice;
+    @FXML private Label detailRating;
+    @FXML private Label detailNumRated;
+    @FXML private Label detailUrl;
 
     private final ObservableList<Book> books = FXCollections.observableArrayList();
 
@@ -37,6 +53,9 @@ public class MainController {
         // Auto-resize columns
         booksTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
+        // Ensure the details pane starts hidden
+        hideBookDetails();
+
         // Dummy data for now
         books.addAll(
                 new Book("Clean Code", "Robert C. Martin", "Programming", "Software Engineering", "Paperback", 25.5, 4.8, 10500, "https://..."),
@@ -48,22 +67,46 @@ public class MainController {
 
         // Show details when a book is selected
         booksTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
-            if (newSel != null) showBookDetails(newSel);
+            if (newSel != null) {
+                showBookDetails(newSel);
+            } else {
+                hideBookDetails();
+            }
         });
     }
 
     private void showBookDetails(Book book) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Book Details");
-        alert.setHeaderText(book.getTitle());
-        alert.setContentText(
-                "Author: " + book.getAuthor() + "\n" +
-                        "Main Genre: " + book.getMainGenre() + "\n" +
-                        "Sub-Genre: " + book.getSubGenre() + "\n" +
-                        "Type: " + book.getType() + "\n" +
-                        "Price: $" + book.getPrice() + "\n" +
-                        "Rating: " + book.getRating() + " (" + book.getNumRated() + " ratings)"
-        );
-        alert.showAndWait();
+        detailTitle.setText(book.getTitle());
+        detailAuthor.setText(book.getAuthor());
+        detailMainGenre.setText(book.getMainGenre());
+        detailSubGenre.setText(book.getSubGenre());
+        detailType.setText(book.getType());
+        detailPrice.setText(String.format("$%.2f", book.getPrice()));
+        detailRating.setText(String.format("%.1f / 5", book.getRating()));
+        detailNumRated.setText(String.valueOf(book.getNumRated()));
+        detailUrl.setText(book.getUrl());
+
+        bookDetailsPane.setManaged(true);
+        bookDetailsPane.setVisible(true);
+    }
+
+    private void hideBookDetails() {
+        bookDetailsPane.setManaged(false);
+        bookDetailsPane.setVisible(false);
+        detailTitle.setText("");
+        detailAuthor.setText("");
+        detailMainGenre.setText("");
+        detailSubGenre.setText("");
+        detailType.setText("");
+        detailPrice.setText("");
+        detailRating.setText("");
+        detailNumRated.setText("");
+        detailUrl.setText("");
+    }
+
+    @FXML
+    private void handleCloseDetails() {
+        booksTable.getSelectionModel().clearSelection();
+        hideBookDetails();
     }
 }

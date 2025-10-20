@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
@@ -38,16 +38,54 @@
                         </top>
 
                         <center>
-                            <TableView fx:id="booksTable">
-                                <columns>
-                                    <TableColumn fx:id="colTitle" text="Title"/>
-                                    <TableColumn fx:id="colAuthor" text="Author"/>
-                                    <TableColumn fx:id="colGenre" text="Genre"/>
-                                    <TableColumn fx:id="colSubGenre" text="Sub-Genre"/>
-                                    <TableColumn fx:id="colPrice" text="Price"/>
-                                    <TableColumn fx:id="colRating" text="Rating"/>
-                                </columns>
-                            </TableView>
+                            <SplitPane dividerPositions="0.67">
+                                <items>
+                                    <TableView fx:id="booksTable">
+                                        <columns>
+                                            <TableColumn fx:id="colTitle" text="Title"/>
+                                            <TableColumn fx:id="colAuthor" text="Author"/>
+                                            <TableColumn fx:id="colGenre" text="Genre"/>
+                                            <TableColumn fx:id="colSubGenre" text="Sub-Genre"/>
+                                            <TableColumn fx:id="colPrice" text="Price"/>
+                                            <TableColumn fx:id="colRating" text="Rating"/>
+                                        </columns>
+                                    </TableView>
+                                    <VBox fx:id="bookDetailsPane" spacing="8" prefWidth="320" visible="false" managed="false"
+                                          style="-fx-background-color: #f4f6f8; -fx-padding: 16;">
+                                        <HBox alignment="CENTER_RIGHT">
+                                            <Button fx:id="closeDetailsButton" text="✕" onAction="#handleCloseDetails"
+                                                    style="-fx-background-color: transparent; -fx-font-size: 16; -fx-text-fill: #7f8c8d;" />
+                                        </HBox>
+                                        <Label text="Book Details" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                                        <Separator />
+                                        <GridPane hgap="10" vgap="8">
+                                            <columnConstraints>
+                                                <ColumnConstraints halignment="RIGHT" prefWidth="100" />
+                                                <ColumnConstraints prefWidth="200" />
+                                            </columnConstraints>
+                                            <Label text="Title:" GridPane.rowIndex="0" />
+                                            <Label fx:id="detailTitle" GridPane.rowIndex="0" GridPane.columnIndex="1" wrapText="true" />
+                                            <Label text="Author:" GridPane.rowIndex="1" />
+                                            <Label fx:id="detailAuthor" GridPane.rowIndex="1" GridPane.columnIndex="1" wrapText="true" />
+                                            <Label text="Main Genre:" GridPane.rowIndex="2" />
+                                            <Label fx:id="detailMainGenre" GridPane.rowIndex="2" GridPane.columnIndex="1" wrapText="true" />
+                                            <Label text="Sub-Genre:" GridPane.rowIndex="3" />
+                                            <Label fx:id="detailSubGenre" GridPane.rowIndex="3" GridPane.columnIndex="1" wrapText="true" />
+                                            <Label text="Type:" GridPane.rowIndex="4" />
+                                            <Label fx:id="detailType" GridPane.rowIndex="4" GridPane.columnIndex="1" wrapText="true" />
+                                            <Label text="Price:" GridPane.rowIndex="5" />
+                                            <Label fx:id="detailPrice" GridPane.rowIndex="5" GridPane.columnIndex="1" />
+                                            <Label text="Rating:" GridPane.rowIndex="6" />
+                                            <Label fx:id="detailRating" GridPane.rowIndex="6" GridPane.columnIndex="1" />
+                                            <Label text="Ratings Count:" GridPane.rowIndex="7" />
+                                            <Label fx:id="detailNumRated" GridPane.rowIndex="7" GridPane.columnIndex="1" />
+                                        </GridPane>
+                                        <Separator />
+                                        <Label text="Link:" />
+                                        <Label fx:id="detailUrl" wrapText="true" />
+                                    </VBox>
+                                </items>
+                            </SplitPane>
                         </center>
 
                         <bottom>
