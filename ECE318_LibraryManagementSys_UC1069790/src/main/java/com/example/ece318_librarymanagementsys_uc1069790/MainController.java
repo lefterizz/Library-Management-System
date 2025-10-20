@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -26,16 +27,16 @@ public class MainController {
     @FXML private ComboBox<String> filterGenreBox;
     @FXML private ComboBox<String> filterSubGenreBox;
 
-    private final ObservableList<Book> books = FXCollections.observableArrayList();
+    @FXML private VBox bookDetailsPane;
+    @FXML private Label detailTitleValue;
+    @FXML private Label detailAuthorValue;
+    @FXML private Label detailGenreValue;
+    @FXML private Label detailSubGenreValue;
+    @FXML private Label detailTypeValue;
+    @FXML private Label detailPriceValue;
+    @FXML private Label detailRatingValue;
 
-    private Tab bookDetailsTab;
-    private Label detailTitleValue;
-    private Label detailAuthorValue;
-    private Label detailGenreValue;
-    private Label detailSubGenreValue;
-    private Label detailTypeValue;
-    private Label detailPriceValue;
-    private Label detailRatingValue;
+    private final ObservableList<Book> books = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
@@ -62,13 +63,14 @@ public class MainController {
         );
 
         booksTable.setItems(books);
+        hideBookDetails();
 
         // Show details when a book is selected
         booksTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
             if (newSel != null) {
                 showBookDetails(newSel);
             } else {
-                hideBookDetailsTab();
+                hideBookDetails();
             }
         });
     }
@@ -124,10 +126,6 @@ public class MainController {
     }
 
     private void showBookDetails(Book book) {
-        if (!mainTabPane.getTabs().contains(bookDetailsTab)) {
-            mainTabPane.getTabs().add(bookDetailsTab);
-        }
-
         detailTitleValue.setText(book.getTitle());
         detailAuthorValue.setText(book.getAuthor());
         detailGenreValue.setText(book.getMainGenre());
@@ -135,14 +133,17 @@ public class MainController {
         detailTypeValue.setText(book.getType());
         detailPriceValue.setText("$" + String.format("%.2f", book.getPrice()));
         detailRatingValue.setText(book.getRating() + " (" + book.getNumRated() + " ratings)");
-
-        mainTabPane.getSelectionModel().select(bookDetailsTab);
     }
 
-    private void hideBookDetailsTab() {
-        if (mainTabPane.getTabs().contains(bookDetailsTab)) {
-            mainTabPane.getTabs().remove(bookDetailsTab);
-        }
-        mainTabPane.getSelectionModel().select(booksTab);
+    private void hideBookDetails() {
+        bookDetailsPane.setVisible(false);
+        bookDetailsPane.setManaged(false);
+        detailTitleValue.setText("-");
+        detailAuthorValue.setText("-");
+        detailGenreValue.setText("-");
+        detailSubGenreValue.setText("-");
+        detailTypeValue.setText("-");
+        detailPriceValue.setText("-");
+        detailRatingValue.setText("-");
     }
 }
